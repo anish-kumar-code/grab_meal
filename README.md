@@ -3,8 +3,8 @@
 **Grab Meal** is a multi-vendor food ordering platform that connects users with vendors to order meals seamlessly.  
 
 ## 🎨 Figma Designs  
-- [Vendor Panel](#)  
-- [User Interface](#)  
+- [User Interface](https://www.figma.com/design/2dKSISUlJ2gsIdnPXSKoy6/Grab-Meal-(Copy)?node-id=59-3405&p=f&t=tQUIxjr6u2rqDaab-0)  
+- [Vendor Panel](https://www.figma.com/design/sIlbyVVBoLES4iKgf1IQcd/Go-Rabit?node-id=0-1&p=f&t=ljXsH33JjkLTKqBN-0)  
 
 ## 🚀 Features  
 - Multi-vendor support  
