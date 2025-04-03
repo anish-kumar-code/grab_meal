@@ -67,7 +67,7 @@ const vendorSchema = new mongoose.Schema({
   // },
   service_id: [
     {
-      type: mongoose.Schema.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,
       ref: "Service",
       required: true,
     }

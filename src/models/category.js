@@ -9,7 +9,7 @@ const category = mongoose.Schema({
         type: String,
     },
     cat_id: {
-        type: mongoose.Schema.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         ref: "Category",
     },
     status: {

@@ -2,7 +2,7 @@ const mongoose = require("mongoose")
 
 const vendorAccountSchema = mongoose.Schema({
     vendorId: {
-        type: mongoose.Schema.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         ref: "Vendor",
         required: true
     },
