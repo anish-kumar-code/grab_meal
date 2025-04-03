@@ -21,6 +21,7 @@ const { getProduct } = require("../controllers/vendor/productController/getProdu
 const { createToppins } = require("../controllers/vendor/toppinsController/createToppins");
 const { getAllOrder } = require("../controllers/vendor/orderController/getAllOrder");
 const { todayOrder } = require("../controllers/vendor/orderController/todayOrder");
+const { createCoupon } = require("../controllers/vendor/couponController/createCoupon");
 
 router.get("/test", test);
 
@@ -48,6 +49,9 @@ router.post("/brand/create", vendorAuthenticate, fileUploader([{ name: "image", 
 
 // toppins
 router.post("/toppins/create", vendorAuthenticate, createToppins);
+
+// coupon
+router.post("/coupon/create", vendorAuthenticate, createCoupon)
 
 // product
 router.post("/product/create", vendorAuthenticate, fileUploader([{ name: "primary_image", maxCount: 1 }, { name: "gallery_image", maxCount: 10 }], "product"), createProduct);

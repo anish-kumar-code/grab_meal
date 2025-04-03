@@ -83,7 +83,7 @@ exports.signUp = catchAsync(async (req, res, next) => {
 
   const hashedPassword = await bcrypt.hash(password, 12);
 
-  vendor = new Vendor({
+  let vendor = new Vendor({
     owner_name,
     shop_name,
     user_id,

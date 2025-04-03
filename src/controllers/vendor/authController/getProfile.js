@@ -10,5 +10,9 @@ exports.getProfile = catchAsync(async (req, res, next) => {
     const vendorAccountDetails = await VendorAccount.findOne({ vendorId: vendor._id });
     const shopTime = await ShopSchedule.findOne({ vendorId: vendor._id })
 
-    return res.status(200).json({ vendor, vendorAccountDetails, shopTime, message: "Vendor Profile" });
+    return res.status(200).json({
+        status: true,
+        message: "Vendor Profile",
+        data: {vendor, vendorAccountDetails, shopTime}
+    });
 });
