@@ -27,11 +27,11 @@ router.get("/test", (req, res) => {
 app.use(router);
 
 // testing middleware
-app.use("/", (req, res, next) => {
-  console.log("Slash route is working");
-  // console.log(req.body);
-  next();
-});
+// app.use("/", (req, res, next) => {
+//   console.log("Slash route is working");
+//   console.log(req.body);
+//   next();
+// });
 
 appRoutes(app);
 

@@ -3,9 +3,9 @@ const { createAddeess } = require("../controllers/user/addressController/createA
 const { createOrder } = require("../controllers/user/orderController/createOrder")
 const router = express.Router()
 
-router.get("/test", (req,res)=>{
-    return res.status(200).json({message : "This is user test route"})
-})
+// router.get("/test", (req,res)=>{
+//     return res.status(200).json({message : "This is user test route"})
+// })
 
 // address
 router.post("/address/create", createAddeess)

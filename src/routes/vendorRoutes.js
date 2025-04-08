@@ -26,8 +26,9 @@ const { getAllService } = require("../controllers/vendor/serviceController/getAl
 const { getAllBrand } = require("../controllers/vendor/brandController/getAllBrand");
 const { updateProductStatus } = require("../controllers/vendor/productController/updateProductStatus");
 const { deleteMultipleProducts } = require("../controllers/vendor/productController/deleteMultipleProduct");
+const { getOrder } = require("../controllers/vendor/orderController/getOrder");
 
-router.get("/test", test);
+// router.get("/test", test);
 
 // auth
 router.post("/register", fileUploader([{ name: "profileImage", maxCount: 1 }], "vendor"), signUp);
@@ -86,8 +87,8 @@ router.post("/product/delete/bulk", vendorAuthenticate, deleteMultipleProducts)
 
 // order
 router.get("/order/list", vendorAuthenticate, getAllOrder)
-router.get("/order/:id", vendorAuthenticate, todayOrder)
 router.get("/order/today", vendorAuthenticate, todayOrder)
+router.get("/order/:id", vendorAuthenticate, getOrder)
 
 
 
