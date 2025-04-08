@@ -13,13 +13,7 @@ const vendorSchema = new mongoose.Schema({
   },
   user_id: {
     type: String,
-    required: true,
-    trim: true,
-    validate: {
-      validator: function (v) {
-        return /^[a-z]+$/.test(v);
-      },
-    },
+    required: true
   },
   password: {
     type: String,
@@ -49,9 +43,8 @@ const vendorSchema = new mongoose.Schema({
   },
   type: {
     type: String,
-    required: true,
     enum: ["gst", "pan", "other"],
-    default: "other",
+    default: "other", // this is not in used
   },
   gst_no: {
     type: String,
@@ -61,10 +54,6 @@ const vendorSchema = new mongoose.Schema({
     type: String,
     trim: true,
   },
-  // category_id: {
-  //   type: String,
-  //   required: true,
-  // },
   service_id: [
     {
       type: mongoose.Schema.Types.ObjectId,
@@ -72,6 +61,22 @@ const vendorSchema = new mongoose.Schema({
       required: true,
     }
   ],
+  food_license_no: {
+    type: String,
+    required: true
+  },
+  lat: {
+    type: String,
+    required: true
+  },
+  long: {
+    type: String,
+    required: true
+  },
+  address: {
+    type: String,
+    required: true
+  },
   isApproved: {
     type: Boolean,
     default: 0

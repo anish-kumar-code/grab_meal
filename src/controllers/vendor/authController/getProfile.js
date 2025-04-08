@@ -13,6 +13,6 @@ exports.getProfile = catchAsync(async (req, res, next) => {
     return res.status(200).json({
         status: true,
         message: "Vendor Profile",
-        data: {vendor, vendorAccountDetails, shopTime}
+        data: { vendor, vendorAccountDetails, shopTime }
     });
 });

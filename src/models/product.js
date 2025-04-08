@@ -34,15 +34,15 @@ const ProductSchema = new mongoose.Schema({
         required: true
     },
     mrp: {
-        type: Number,
+        type: String,
         required: true
     },
     sellingPrice: {
-        type: Number,
+        type: String,
         required: true
     },
     discount: {
-        type: Number,
+        type: String,
         default: 0
     },
     unitOfMeasurement: {

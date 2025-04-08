@@ -1,4 +1,5 @@
 const Order = require("../../../models/order");
+const OrderDetails = require("../../../models/orderDetails");
 const VendorOrderHistory = require("../../../models/vendorOrderHistory");
 const AppError = require("../../../utils/AppError");
 const catchAsync = require("../../../utils/catchAsync");
@@ -43,7 +44,6 @@ exports.createOrder = catchAsync(async (req, res, next) => {
 
     await order.save();
 
-
     // filter order based on vendor and save theme in vendorOrder table
     let vendorOrders = {};
     product_data.forEach((product) => {
@@ -69,6 +69,20 @@ exports.createOrder = catchAsync(async (req, res, next) => {
             order_status: "pending"
         });
         await vendorOrder.save();
+    }
+
+    // store single single order in order details schema
+    for (let product of product_data) {
+        const orderDetail = new OrderDetails({
+            order_id: order._id,
+            vendor_id: product.vendor_id,
+            booking_id,
+            product_id: product.product_id,
+            quantity: product.quantity,
+            price: product.price,
+            status: "pending"
+        });
+        await orderDetail.save();
     }
 
 

@@ -1,6 +1,4 @@
 const Category = require("../../../models/category");
-const Service = require("../../../models/service");
-const service = require("../../../models/service");
 const AppError = require("../../../utils/AppError");
 const catchAsync = require("../../../utils/catchAsync");
 

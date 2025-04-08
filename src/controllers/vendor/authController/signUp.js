@@ -18,10 +18,10 @@ exports.signUp = catchAsync(async (req, res, next) => {
     mobile_no,
     alternate_phoneNo,
     email,
-    type,
     gst_no,
     pan_no,
-    service_id
+    service_id,
+    food_license_no, lat, long, address
   } = req.body;
 
   const requiredFields = [
@@ -32,7 +32,11 @@ exports.signUp = catchAsync(async (req, res, next) => {
     { field: mobile_no, name: "Mobile Number" },
     { field: alternate_phoneNo, name: "Alternate Mobile Number" },
     { field: email, name: "Email" },
-    { field: type, name: "Type" },
+    { field: pan_no, name: "Pan Card No" },
+    { field: food_license_no, name: "Food License No" },
+    { field: lat, name: "Latitude" },
+    { field: long, name: "Longitude" },
+    { field: address, name: "Address" },
   ];
 
   for (const { field, name } of requiredFields) {
@@ -47,19 +51,13 @@ exports.signUp = catchAsync(async (req, res, next) => {
   mobile_no = String(mobile_no).trim();
   email = email ? String(email).trim() : null;
   gst_no = gst_no ? String(gst_no).trim() : null;
-  pan_no = pan_no ? String(pan_no).trim() : "";
   user_id = String(user_id).trim().toLocaleLowerCase();
 
-  if (!/^[a-z]+$/.test(user_id)) {
-    return next(new AppError("User ID must contain only letters (a-z).", 400));
+  if (!/^[a-z0-9]+$/.test(user_id)) {
+    return next(new AppError("User ID must contain only lowercase letters and numbers.", 400));
   }
 
-  if (
-    isNaN(mobile_no) ||
-    mobile_no.includes("e") ||
-    mobile_no.includes(".") ||
-    mobile_no.length != 10
-  ) {
+  if (!/^\d{10}$/.test(mobile_no)) {
     return next(new AppError("Invalid mobile number.", 400));
   }
 
@@ -92,10 +90,13 @@ exports.signUp = catchAsync(async (req, res, next) => {
     alternate_phoneNo,
     email,
     profileImage: profileImagePath,
-    type,
     gst_no,
     pan_no,
-    service_id
+    service_id,
+    food_license_no,
+    lat,
+    long,
+    address
   });
 
   await vendor.save();

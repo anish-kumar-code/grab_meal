@@ -22,6 +22,10 @@ const { createToppins } = require("../controllers/vendor/toppinsController/creat
 const { getAllOrder } = require("../controllers/vendor/orderController/getAllOrder");
 const { todayOrder } = require("../controllers/vendor/orderController/todayOrder");
 const { createCoupon } = require("../controllers/vendor/couponController/createCoupon");
+const { getAllService } = require("../controllers/vendor/serviceController/getAllService");
+const { getAllBrand } = require("../controllers/vendor/brandController/getAllBrand");
+const { updateProductStatus } = require("../controllers/vendor/productController/updateProductStatus");
+const { deleteMultipleProducts } = require("../controllers/vendor/productController/deleteMultipleProduct");
 
 router.get("/test", test);
 
@@ -36,6 +40,7 @@ router.get("/logout", logout);
 
 // service
 router.post("/service/create", createService);
+router.get("/service/list", getAllService)
 
 
 // category
@@ -46,6 +51,7 @@ router.post("/subcategory/list", getAllSubCategory)
 
 // brand
 router.post("/brand/create", vendorAuthenticate, fileUploader([{ name: "image", maxCount: 1 }], "brand"), createBrand);
+router.get("/brand/list", getAllBrand)
 
 // toppins
 router.post("/toppins/create", vendorAuthenticate, createToppins);
@@ -54,14 +60,33 @@ router.post("/toppins/create", vendorAuthenticate, createToppins);
 router.post("/coupon/create", vendorAuthenticate, createCoupon)
 
 // product
-router.post("/product/create", vendorAuthenticate, fileUploader([{ name: "primary_image", maxCount: 1 }, { name: "gallery_image", maxCount: 10 }], "product"), createProduct);
+router.post("/product/create",
+    vendorAuthenticate,
+    fileUploader("product", [
+        { name: "primary_image", maxCount: 1 },
+        { name: "gallery_image", maxCount: 10 }
+    ]),
+    createProduct
+);
 router.get("/product/list", vendorAuthenticate, getAllProduct)
 router.get("/product/:id", vendorAuthenticate, getProduct)
-router.patch("/product/update/:id", vendorAuthenticate, fileUploader([{ name: "images", maxCount: 10 }], "product"), updateProduct);
+router.post("/product/status", vendorAuthenticate, updateProductStatus)
+router.patch(
+    "/product/update/:id",
+    vendorAuthenticate,
+    fileUploader("product", [
+      { name: "primary_image", maxCount: 1 },
+      { name: "gallery_image", maxCount: 10 },
+    ]),
+    updateProduct
+  );
 router.delete("/product/delete/:id", vendorAuthenticate, deleteProduct);
+router.post("/product/delete/bulk", vendorAuthenticate, deleteMultipleProducts)
+
 
 // order
 router.get("/order/list", vendorAuthenticate, getAllOrder)
+router.get("/order/:id", vendorAuthenticate, todayOrder)
 router.get("/order/today", vendorAuthenticate, todayOrder)
 
 

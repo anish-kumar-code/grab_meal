@@ -1,53 +1,24 @@
 const multer = require("multer");
 const fs = require("fs");
-const AppError = require("../utils/AppError");
+const path = require("path");
 
-const allowedMimeTypes = [
-  "image/png",
-  "image/jpeg",
-  "image/jpg",
-  "image/webp",
-  "image/gif",
-  "video/mp4",
-  "video/quicktime",
-  "video/x-msvideo",
-  "video/x-matroska",
-  "video/webm",
-  "video/ogg",
-  "application/pdf",
-  "application/msword",
-  "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-  "text/csv",
-  "application/vnd.ms-excel",
-];
-
-const fileUploader = (field, folder) => {
+const fileUploader = (folderName, fields) => {
   const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-      if (!fs.existsSync(`public/${folder}`)) {
-        fs.mkdirSync(`public/${folder}`, { recursive: true });
+      const uploadPath = path.join("public", folderName);
+      if (!fs.existsSync(uploadPath)) {
+        fs.mkdirSync(uploadPath, { recursive: true });
       }
-      cb(null, `public/${folder}`);
+      cb(null, uploadPath);
     },
     filename: function (req, file, cb) {
-      const { originalname } = file;
-      const extI = originalname.lastIndexOf(".");
-      const fileExt = extI !== -1 ? originalname.substring(extI).toLowerCase() : ".jpeg";
-      const fileName = `${folder}-${Date.now()}${fileExt}`;
+      const ext = path.extname(file.originalname) || ".jpeg";
+      const fileName = `${folderName}-${Date.now()}-${Math.round(Math.random() * 1e4)}${ext}`;
       cb(null, fileName);
     },
   });
 
-  const upload = multer({
-    storage: storage,
-    fileFilter: (req, file, cb) => {
-      allowedMimeTypes.includes(file.mimetype)
-        ? cb(null, true)
-        : cb(new AppError("Invalid file type", 400));
-    },
-  }).fields([...field]);
-
-  return upload;
+  return multer({ storage }).fields(fields);
 };
 
 module.exports = fileUploader;
