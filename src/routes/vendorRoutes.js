@@ -31,11 +31,11 @@ const { getOrder } = require("../controllers/vendor/orderController/getOrder");
 // router.get("/test", test);
 
 // auth
-router.post("/register", fileUploader([{ name: "profileImage", maxCount: 1 }], "vendor"), signUp);
+router.post("/register", fileUploader("vendor", [{ name: "profileImage", maxCount: 1 }]), signUp);
 router.post("/login", login);
 router.get("/getProfile", vendorAuthenticate, getProfile);
 // router.patch("/updateProfile", vendorAuthenticate, fileUploader([{ name: "profileImage", maxCount: 1 }], "vendor"), updateProfile);
-router.patch("/updateProfile", vendorAuthenticate, updateProfile);
+router.post("/updateProfile", vendorAuthenticate, fileUploader("vendor", [{ name: "profileImage", maxCount: 1 }]), updateProfile);
 router.get("/logout", logout);
 
 
@@ -45,13 +45,13 @@ router.get("/service/list", getAllService)
 
 
 // category
-router.post("/category/create", vendorAuthenticate, fileUploader([{ name: "image", maxCount: 1 }], "category"), createCategory)
+router.post("/category/create", vendorAuthenticate, fileUploader("category", [{ name: "image", maxCount: 1 }]), createCategory)
 router.get("/category/list", getAllCategory)
 router.post("/subcategory/list", getAllSubCategory)
 
 
 // brand
-router.post("/brand/create", vendorAuthenticate, fileUploader([{ name: "image", maxCount: 1 }], "brand"), createBrand);
+router.post("/brand/create", vendorAuthenticate, fileUploader("brand", [{ name: "image", maxCount: 1 }]), createBrand);
 router.get("/brand/list", getAllBrand)
 
 // toppins
@@ -76,11 +76,11 @@ router.patch(
     "/product/update/:id",
     vendorAuthenticate,
     fileUploader("product", [
-      { name: "primary_image", maxCount: 1 },
-      { name: "gallery_image", maxCount: 10 },
+        { name: "primary_image", maxCount: 1 },
+        { name: "gallery_image", maxCount: 10 },
     ]),
     updateProduct
-  );
+);
 router.delete("/product/delete/:id", vendorAuthenticate, deleteProduct);
 router.post("/product/delete/bulk", vendorAuthenticate, deleteMultipleProducts)
 
