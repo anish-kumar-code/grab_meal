@@ -29,6 +29,7 @@ const vendorSchema = new mongoose.Schema({
   alternate_phoneNo: {
     type: String,
     match: [/^\d{10}$/],
+    default: ""
   },
   email: {
     type: String,
@@ -40,6 +41,7 @@ const vendorSchema = new mongoose.Schema({
   },
   profileImage: {
     type: String,
+    default: ""
   },
   type: {
     type: String,
@@ -49,10 +51,12 @@ const vendorSchema = new mongoose.Schema({
   gst_no: {
     type: String,
     trim: true,
+    default: ""
   },
   pan_no: {
     type: String,
     trim: true,
+    default: ""
   },
   service_id: [
     {
@@ -63,7 +67,7 @@ const vendorSchema = new mongoose.Schema({
   ],
   food_license_no: {
     type: String,
-    required: true
+    required: true,
   },
   lat: {
     type: String,
