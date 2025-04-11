@@ -5,7 +5,8 @@ exports.getAllProduct = catchAsync(async (req, res, nex) => {
 
     const vendor_id = req.vendor._id
 
-    const allProduct = await Product.find({ status: "active", vendorId: vendor_id });
+    const allProduct = await Product.find({ vendorId: vendor_id });
+    // const allProduct = await Product.find({ status: "active", vendorId: vendor_id });
 
     return res.status(200).json({
         status: "success",

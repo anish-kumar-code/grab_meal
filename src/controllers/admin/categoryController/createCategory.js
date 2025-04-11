@@ -12,7 +12,7 @@ exports.createCategory = catchAsync(async (req, res) => {
         const url = `${req.files.image[0].destination}/${req.files.image[0].filename}`;
         imagePath = url;
     } else {
-        imagePath = url;
+        imagePath = "";
     }
 
     let category;

@@ -52,7 +52,8 @@ exports.updateProfile = catchAsync(async (req, res, next) => {
     if (mobile_no) vendor.mobile_no = mobile_no;
     if (alternate_phoneNo) vendor.alternate_phoneNo = alternate_phoneNo;
     if (email) vendor.email = email.toString().trim();
-    if (service_id) vendor.service_id = service_id;
+    // if (service_id) vendor.service_id = service_id;
+    if (service_id) vendor.service_id = Array.isArray(service_id) ? service_id : [service_id];
     if (food_license_no) vendor.food_license_no = food_license_no;
     if (lat) vendor.lat = lat;
     if (long) vendor.long = long;
