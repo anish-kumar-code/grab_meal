@@ -33,6 +33,4 @@ exports.createCategory = catchAsync(async (req, res) => {
         data: { category }
     })
 
-
-
 })

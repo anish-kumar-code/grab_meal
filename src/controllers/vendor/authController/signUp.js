@@ -1,8 +1,9 @@
+const ShopSchedule = require("../../../models/shopSchedule");
 const Vendor = require("../../../models/vendor");
+const VendorAccount = require("../../../models/vendorAccount");
 const AppError = require("../../../utils/AppError");
 const catchAsync = require("../../../utils/catchAsync");
 const bcrypt = require('bcrypt');
-const axios = require("axios");
 
 const validateRequiredField = (field, fieldName) => {
   if (!field || !field.trim()) return new AppError(`${fieldName} is required.`, 400);
@@ -21,7 +22,7 @@ exports.signUp = catchAsync(async (req, res, next) => {
     gst_no,
     pan_no,
     service_id,
-    food_license_no, lat, long, address
+    food_license_no, lat, long, address, description
   } = req.body;
 
   const requiredFields = [
@@ -30,13 +31,7 @@ exports.signUp = catchAsync(async (req, res, next) => {
     { field: user_id, name: "User ID" },
     { field: password, name: "Password" },
     { field: mobile_no, name: "Mobile Number" },
-    { field: alternate_phoneNo, name: "Alternate Mobile Number" },
-    { field: email, name: "Email" },
-    { field: pan_no, name: "Pan Card No" },
-    { field: food_license_no, name: "Food License No" },
-    { field: lat, name: "Latitude" },
-    { field: long, name: "Longitude" },
-    { field: address, name: "Address" },
+    { field: email, name: "Email" }
   ];
 
   for (const { field, name } of requiredFields) {
@@ -96,15 +91,41 @@ exports.signUp = catchAsync(async (req, res, next) => {
     food_license_no,
     lat,
     long,
-    address
+    address,
+    description
   });
 
   await vendor.save();
 
+  let vendorAccount = await VendorAccount.create({
+    vendorId: vendor._id,
+    bankName: "",
+    accountNo: "",
+    ifsc: "",
+    branchName: "",
+  });
+
+  const daysOfWeek = [
+    "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"
+  ];
+
+  const defaultSchedule = daysOfWeek.map(day => ({
+    day,
+    openTime: "",
+    closeTime: "",
+    isClosed: false,
+  }));
+
+  let shopTime = await ShopSchedule.create({
+    vendorId: vendor._id,
+    schedule: defaultSchedule
+  });
+
+
   return res.status(201).json({
     status: true,
     message: "Vendor Register Successfully please wait for account approval!",
-    data: { vendor },
+    data: { vendor, vendorAccount, shopTime },
     newVendor: true,
   });
 });

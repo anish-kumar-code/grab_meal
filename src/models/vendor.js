@@ -67,7 +67,19 @@ const vendorSchema = new mongoose.Schema({
   ],
   food_license_no: {
     type: String,
-    required: true,
+    default: ""
+  },
+  description: {
+    type: String,
+    default: ""
+  },
+  like: {
+    type: Number,
+    default: 0
+  },
+  followers: {
+    type: Number,
+    default: 0
   },
   lat: {
     type: String,
