@@ -42,8 +42,6 @@ exports.createProduct = catchAsync(async (req, res, next) => {
         galleryimagePaths = imagesUrls;
     }
 
-    // return res.status(200).json(req.files.gallery_image)
-
     // primary_image
     let primaryImage;
     if (req.files && req.files.primary_image) {

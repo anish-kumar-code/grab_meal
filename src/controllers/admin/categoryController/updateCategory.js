@@ -7,15 +7,6 @@ exports.updateCategory = catchAsync(async (req, res) => {
     let { name, cat_id } = req.body
 
     let category = await Category.findOne({ _id: id });
-    // if (cat_id) {
-    //     // Update subcategory
-    //     category = await Category.findOne({ _id: id, cat_id });
-    //     if (!category) return res.status(404).json({ status: false, message: "Subcategory not found" });
-    // } else {
-    //     // Update main category
-    //     category = await Category.findOne({ _id: id });
-    //     if (!category) return res.status(404).json({ status: false, message: "Category not found" });
-    // }
 
     let imageNew = category.image;
     if (req.files && req.files.image && req.files.image.length > 0) {
