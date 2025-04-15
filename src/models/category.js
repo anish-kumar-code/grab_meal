@@ -12,6 +12,14 @@ const category = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "Category",
     },
+    type: {
+        type: String,
+        enum: ["veg", "nonveg"]
+    },
+    serviceId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Service'
+    },
     status: {
         type: String,
         enum: ["active", "inactive"],

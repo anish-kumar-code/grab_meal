@@ -27,6 +27,7 @@ const { getAllBrand } = require("../controllers/vendor/brandController/getAllBra
 const { updateProductStatus } = require("../controllers/vendor/productController/updateProductStatus");
 const { deleteMultipleProducts } = require("../controllers/vendor/productController/deleteMultipleProduct");
 const { getOrder } = require("../controllers/vendor/orderController/getOrder");
+const { forgetPassword } = require("../controllers/vendor/authController/forgetPassword");
 
 // router.get("/test", test);
 
@@ -34,7 +35,7 @@ const { getOrder } = require("../controllers/vendor/orderController/getOrder");
 router.post("/register", fileUploader("vendor", [{ name: "profileImage", maxCount: 1 }]), signUp);
 router.post("/login", login);
 router.get("/getProfile", vendorAuthenticate, getProfile);
-// router.patch("/updateProfile", vendorAuthenticate, fileUploader([{ name: "profileImage", maxCount: 1 }], "vendor"), updateProfile);
+router.post("/forgetPassword", forgetPassword);
 router.post("/updateProfile", vendorAuthenticate, fileUploader("vendor", [{ name: "profileImage", maxCount: 1 }]), updateProfile);
 router.get("/logout", logout);
 
@@ -69,7 +70,7 @@ router.post("/product/create",
     ]),
     createProduct
 );
-router.get("/product/list", vendorAuthenticate, getAllProduct)
+router.get("/product/list/:serviceId", vendorAuthenticate, getAllProduct)
 router.get("/product/:id", vendorAuthenticate, getProduct)
 router.post("/product/status", vendorAuthenticate, updateProductStatus)
 router.patch(

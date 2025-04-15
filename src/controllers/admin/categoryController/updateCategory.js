@@ -4,7 +4,7 @@ const deleteOldFiles = require("../../../utils/deleteOldFiles");
 
 exports.updateCategory = catchAsync(async (req, res) => {
     let id = req.params.id
-    let { name, cat_id } = req.body
+    let { name, cat_id, type, serviceId } = req.body
 
     let category = await Category.findOne({ _id: id });
 
@@ -18,6 +18,8 @@ exports.updateCategory = catchAsync(async (req, res) => {
     }
 
     category.name = name || category.name;
+    category.type = type || category.type;
+    category.serviceId = serviceId || category.serviceId;
     category.image = imageNew;
     if (cat_id) category.cat_id = cat_id;
 

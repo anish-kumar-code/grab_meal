@@ -14,7 +14,7 @@ const ProductSchema = new mongoose.Schema({
     brandId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Brand',
-        required: true
+        default: "67f619471646a8ac19162996"
     },
     sku: {
         type: String,
@@ -65,10 +65,13 @@ const ProductSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Service'
     },
+    type: {
+        type: String
+    },
     vendorId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Vendor',
-        required: true
+        default: "67f619471646a8ac19162996"
     },
     status: {
         type: String,

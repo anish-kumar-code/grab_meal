@@ -3,7 +3,7 @@ const catchAsync = require("../../../utils/catchAsync");
 
 exports.getCategory = catchAsync(async (req, res) => {
 
-    const allCategory = await Category.find({ cat_id: null });
+    const allCategory = await Category.find({ cat_id: null }).populate({path: "serviceId", select: "name"});
 
     
     return res.status(200).json({

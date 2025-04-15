@@ -8,12 +8,11 @@ const validateRequiredField = (field, fieldName) => {
 };
 
 exports.createProduct = catchAsync(async (req, res, next) => {
-    let { name, categoryId, subCategoryId, brandId, vendorId,sku, mrp, sellingPrice, discount, unitOfMeasurement, sellingUnit, shortDescription, longDescription, serviceId, status } = req.body;
+    let { name, categoryId, subCategoryId, sku, mrp, sellingPrice, discount, unitOfMeasurement, sellingUnit, shortDescription, longDescription, serviceId, type } = req.body;
 
     const requiredFields = [
         { field: name, name: "Product name" },
         { field: categoryId, name: "Category ID" },
-        { field: brandId, name: "Brand ID" },
         { field: sku, name: "SKU" },
         { field: mrp, name: "MRP" },
         { field: sellingPrice, name: "Selling price" },
@@ -51,23 +50,7 @@ exports.createProduct = catchAsync(async (req, res, next) => {
 
 
     let product = new Product({
-        name,
-        categoryId,
-        subCategoryId,
-        brandId,
-        sku,
-        primary_image: primaryImage,
-        gallery_image: galleryimagePaths,
-        mrp,
-        sellingPrice,
-        discount: discount || "",
-        unitOfMeasurement,
-        sellingUnit,
-        shortDescription,
-        longDescription,
-        serviceId,
-        vendorId,
-        status: status || "active"
+        name, categoryId, subCategoryId, sku, primary_image: primaryImage, gallery_image: galleryimagePaths, mrp, sellingPrice, discount: discount || "", unitOfMeasurement, sellingUnit, shortDescription, longDescription, serviceId, type
     });
 
     await product.save();

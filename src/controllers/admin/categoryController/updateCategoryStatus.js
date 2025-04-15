@@ -14,5 +14,5 @@ exports.updateCategoryStatus = catchAsync(async (req, res) => {
         status: true,
         data: { category }
     })
-    
+
 })
