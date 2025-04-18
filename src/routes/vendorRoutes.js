@@ -63,8 +63,8 @@ router.get("/logout", logout);
 router.post("/shop/create", vendorAuthenticate,
     fileUploader("shop", [
         { name: "shopImage", maxCount: 1 },
-        { name: "galleryImage", maxCount: 5 },
-        { name: "menu", maxCount: 1 }
+        { name: "galleryImage", maxCount: 50 },
+        { name: "menu", maxCount: 50 }
     ]),
     createShop
 );
@@ -72,8 +72,8 @@ router.get("/shop/details/:id", vendorAuthenticate, shopDetails);
 router.patch("/shop/update/:id", vendorAuthenticate,
     fileUploader("shop", [
         { name: "shopImage", maxCount: 1 },
-        { name: "galleryImage", maxCount: 5 },
-        { name: "menu", maxCount: 5 }
+        { name: "galleryImage", maxCount: 50 },
+        { name: "menu", maxCount: 50 }
     ]),
     updateShop
 );
