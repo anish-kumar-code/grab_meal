@@ -1,106 +1,36 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 const vendorSchema = new mongoose.Schema({
-  owner_name: {
-    type: String,
-    required: true,
-    trim: true,
-  },
-  shop_name: {
-    type: String,
-    required: true,
-    trim: true,
-  },
-  user_id: {
-    type: String,
-    required: true
-  },
-  password: {
-    type: String,
-    required: true,
-    minlength: 6,
-  },
-  mobile_no: {
-    type: String,
-    required: true,
-    unique: true,
-    match: [/^\d{10}$/, "Mobile number must be a valid 10-digit number"],
-  },
-  alternate_phoneNo: {
-    type: String,
-    match: [/^\d{10}$/],
-    default: ""
-  },
-  email: {
-    type: String,
-    required: true,
-    unique: true,
-    lowercase: true,
-    trim: true,
-    match: [/\S+@\S+\.\S+/, "Email address is invalid"],
-  },
-  profileImage: {
-    type: String,
-    default: ""
-  },
-  type: {
-    type: String,
-    enum: ["gst", "pan", "other"],
-    default: "other", // this is not in used
-  },
-  gst_no: {
-    type: String,
-    trim: true,
-    default: ""
-  },
-  pan_no: {
-    type: String,
-    trim: true,
-    default: ""
-  },
-  service_id: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Service",
-      required: true,
-    }
-  ],
-  food_license_no: {
-    type: String,
-    default: ""
-  },
-  description: {
-    type: String,
-    default: ""
-  },
-  like: {
-    type: Number,
-    default: 0
-  },
-  followers: {
-    type: Number,
-    default: 0
-  },
-  lat: {
-    type: String,
-    required: true
-  },
-  long: {
-    type: String,
-    required: true
-  },
-  address: {
-    type: String,
-    required: true
-  },
-  isApproved: {
-    type: Boolean,
-    default: 0
-  },
-  isBlock: {
-    type: Boolean,
-    default: 0
-  }
+  // VENDOR DETAILS
+  name: { type: String },
+  userId: { type: String, unique: true },
+  password: { type: String },
+  mobile: { type: String },
+  alternateMobile: { type: String, default: '' },
+  email: { type: String, default: '' },
+  profileImg: { type: String, default: '' },
+
+  // DOCUMENTS DETAILS 
+  panNo: { type: String },
+  gstNo: { type: String, default: '0' },
+  foodLicense: { type: String, default: '0' },
+  panImage: { type: String, default: '' },
+  gstImage: { type: String, default: '0' },
+  foodImage: { type: String, default: '' },
+
+  // BANK DETAILS
+  ifsc: { type: String, default: '' },
+  bankName: { type: String, default: '' },
+  branchName: { type: String, default: '' },
+  accountNo: { type: String, default: '' },
+  passbook: { type: String, default: '' },
+  commission: { type: Number, default: 0 },
+  isBlocked: { type: Boolean, default: false },
+  status: { type: Boolean, default: false },
+
+  // AGREEMENT DETAILS
+  agreementAccepted: { type: String, default: 'true' },
+  createdAt: { type: Date, default: Date.now }
 });
 
 const Vendor = mongoose.model("Vendor", vendorSchema);

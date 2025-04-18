@@ -7,7 +7,8 @@ const catchAsync = require("../../../utils/catchAsync");
 exports.getVendorDetails = catchAsync(async (req, res) => {
     let id = req.params.id
 
-    let vendor = await Vendor.findById(id).populate("service_id", "name");
+    let vendor = await Vendor.findById(id);
+    // let vendor = await Vendor.findById(id).populate("service_id", "name");
     const bankDetails = await VendorAccount.findOne({ vendorId: vendor._id })
     const shopTime = await ShopSchedule.findOne({ vendorId: vendor._id })
 

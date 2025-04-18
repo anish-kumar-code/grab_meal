@@ -6,7 +6,7 @@ exports.vendorBlock = catchAsync(async (req, res) => {
     let id = req.params.id
     let { status } = req.body
 
-    let vendor = await Vendor.findOneAndUpdate({_id: id}, { $set: { isBlock: status } }, { new: true });
+    let vendor = await Vendor.findOneAndUpdate({_id: id}, { $set: { isBlocked: status } }, { new: true });
 
     if (!vendor) return new AppError("Vendor not found", 404)
 

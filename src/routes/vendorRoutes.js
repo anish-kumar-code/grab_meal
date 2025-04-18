@@ -28,16 +28,58 @@ const { updateProductStatus } = require("../controllers/vendor/productController
 const { deleteMultipleProducts } = require("../controllers/vendor/productController/deleteMultipleProduct");
 const { getOrder } = require("../controllers/vendor/orderController/getOrder");
 const { forgetPassword } = require("../controllers/vendor/authController/forgetPassword");
+const { createShop } = require("../controllers/vendor/shopController/createShop");
+const { shopDetails } = require("../controllers/vendor/shopController/shopDetails");
+const { updateShop } = require("../controllers/vendor/shopController/updateShop");
+const { closeShop } = require("../controllers/vendor/shopController/closeShop");
+const { statusShop } = require("../controllers/vendor/shopController/statusShop");
+const { vendorShopList } = require("../controllers/vendor/shopController/vendorShopList");
+const { getTermCondition } = require("../controllers/vendor/cmsController/getTermCondition");
+const { getFee } = require("../controllers/vendor/cmsController/getFee");
 
 // router.get("/test", test);
 
 // auth
-router.post("/register", fileUploader("vendor", [{ name: "profileImage", maxCount: 1 }]), signUp);
+// router.post("/register", fileUploader("vendor", [{ name: "profileImage", maxCount: 1 }]), signUp);
+router.post("/register",
+    fileUploader("vendor", [
+        { name: "profileImg", maxCount: 1 },
+        { name: "panImage", maxCount: 1 },
+        { name: "gstImage", maxCount: 1 },
+        { name: "foodImage", maxCount: 1 },
+        { name: "passbook", maxCount: 1 }
+    ]),
+    signUp
+);
+// router.post("/register", signUp);
+
 router.post("/login", login);
 router.get("/getProfile", vendorAuthenticate, getProfile);
 router.post("/forgetPassword", forgetPassword);
 router.post("/updateProfile", vendorAuthenticate, fileUploader("vendor", [{ name: "profileImage", maxCount: 1 }]), updateProfile);
 router.get("/logout", logout);
+
+// shop
+router.post("/shop/create", vendorAuthenticate,
+    fileUploader("shop", [
+        { name: "shopImage", maxCount: 1 },
+        { name: "galleryImage", maxCount: 5 },
+        { name: "menu", maxCount: 1 }
+    ]),
+    createShop
+);
+router.get("/shop/details/:id", vendorAuthenticate, shopDetails);
+router.patch("/shop/update/:id", vendorAuthenticate,
+    fileUploader("shop", [
+        { name: "shopImage", maxCount: 1 },
+        { name: "galleryImage", maxCount: 5 },
+        { name: "menu", maxCount: 5 }
+    ]),
+    updateShop
+);
+router.get("/shop/list", vendorAuthenticate, vendorShopList)
+router.post("/shop/close/:id", vendorAuthenticate, closeShop);
+router.post("/shop/status/:id", vendorAuthenticate, statusShop);
 
 
 // service
@@ -60,6 +102,11 @@ router.post("/toppins/create", vendorAuthenticate, createToppins);
 
 // coupon
 router.post("/coupon/create", vendorAuthenticate, createCoupon)
+
+// cms pages
+router.get("/term-and-condition", getTermCondition)
+router.get("/fee", getFee)
+
 
 // product
 router.post("/product/create",

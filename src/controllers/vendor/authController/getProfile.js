@@ -7,17 +7,17 @@ const catchAsync = require("../../../utils/catchAsync");
 
 exports.getProfile = catchAsync(async (req, res, next) => {
 
-    let vendor = await Vendor.findOne({ _id: req.vendor._id }).populate({ path: "service_id", select: "name-_id", match: { status: "active" } });
-    const vendorAccountDetails = await VendorAccount.findOne({ vendorId: vendor._id });
-    const shopTime = await ShopSchedule.findOne({ vendorId: vendor._id })
+    let vendor = await Vendor.findOne({ _id: req.vendor._id });
+    // const vendorAccountDetails = await VendorAccount.findOne({ vendorId: vendor._id });
+    // const shopTime = await ShopSchedule.findOne({ vendorId: vendor._id })
 
-    let productCount = await Product.countDocuments({ vendorId: vendor._id });
-    vendor = vendor.toObject();
-    vendor.productCount = productCount;
+    // let productCount = await Product.countDocuments({ vendorId: vendor._id });
+    // vendor = vendor.toObject();
+    // vendor.productCount = productCount;
 
     return res.status(200).json({
         status: true,
         message: "Vendor Profile",
-        data: { vendor, vendorAccountDetails, shopTime }
+        data: { vendor }
     });
 });

@@ -1,131 +1,45 @@
-const ShopSchedule = require("../../../models/shopSchedule");
 const Vendor = require("../../../models/vendor");
-const VendorAccount = require("../../../models/vendorAccount");
 const AppError = require("../../../utils/AppError");
 const catchAsync = require("../../../utils/catchAsync");
 const bcrypt = require('bcrypt');
 
-const validateRequiredField = (field, fieldName) => {
-  if (!field || !field.trim()) return new AppError(`${fieldName} is required.`, 400);
-  return null;
-};
-
 exports.signUp = catchAsync(async (req, res, next) => {
-  let {
-    owner_name,
-    shop_name,
-    user_id,
-    password,
-    mobile_no,
-    alternate_phoneNo,
-    email,
-    gst_no,
-    pan_no,
-    service_id,
-    food_license_no, lat, long, address, description
-  } = req.body;
+  let { name, userId, password, mobile, alternateMobile, email, panNo, gstNo, foodLicense, ifsc, bankName, branchName, accountNo, agreement } = req.body;
 
-  const requiredFields = [
-    { field: owner_name, name: "Owner Name" },
-    { field: shop_name, name: "Shop Name" },
-    { field: user_id, name: "User ID" },
-    { field: password, name: "Password" },
-    { field: mobile_no, name: "Mobile Number" },
-    { field: email, name: "Email" }
-  ];
+  const files = req.files;
+  const profileImg = files.profileImg && files.profileImg[0] ? files.profileImg[0].path : "";
+  const panImage = files.panImage && files.panImage[0] ? files.panImage[0].path : "";
+  const gstImage = files.gstImage && files.gstImage[0] ? files.gstImage[0].path : "";
+  const foodImage = files.foodImage && files.foodImage[0] ? files.foodImage[0].path : "";
+  const passbook = files.passbook && files.passbook[0] ? files.passbook[0].path : "";
 
-  for (const { field, name } of requiredFields) {
-    const error = validateRequiredField(field, name);
-    if (error) return next(error);
-  }
+  userId = userId.toLowerCase();
 
-  if (!Array.isArray(service_id) || service_id.length === 0) {
-    return next(new AppError("Service is required.", 400));
-  }
+  if (!name) return next(new AppError("Name is required.", 400));
+  if (!userId) return next(new AppError("User ID is required.", 400));
+  if (!password) return next(new AppError("Password is required.", 400));
+  if (!mobile) return next(new AppError("Mobile number is required.", 400));
+  if (!panNo) return next(new AppError("PAN number is required.", 400));
+  if (!panImage) return next(new AppError("PAN image is required.", 400));
 
-  mobile_no = String(mobile_no).trim();
-  email = email ? String(email).trim() : null;
-  gst_no = gst_no ? String(gst_no).trim() : null;
-  user_id = String(user_id).trim().toLocaleLowerCase();
+  const vendoruserId = await Vendor.findOne({ userId });
+  if (vendoruserId) return next(new AppError("User Id is already exists. Plz enter different User Id.", 400));
+  const vendorMobile = await Vendor.findOne({ mobile });
+  if (vendorMobile) return next(new AppError("Mobile No is already exists. Plz enter different Mobile No.", 400));
 
-  if (!/^[a-z0-9]+$/.test(user_id)) {
-    return next(new AppError("User ID must contain only lowercase letters and numbers.", 400));
-  }
+  var hashPassword = await bcrypt.hash(password, 12)
 
-  if (!/^\d{10}$/.test(mobile_no)) {
-    return next(new AppError("Invalid mobile number.", 400));
-  }
-
-  let vendorUserId = await Vendor.findOne({ user_id });
-  if (vendorUserId) return next(new AppError("Vendor with this user id already exists.", 400));
-
-  let vendorMob = await Vendor.findOne({ mobile_no });
-  if (vendorMob) return next(new AppError("Vendor with this mobile number already exists.", 400));
-
-  let vendorEmail = await Vendor.findOne({ email });
-  if (vendorEmail) return next(new AppError("Vendor with this email id already exists.", 400));
-
-
-  let profileImagePath;
-  if (req.files && req.files.profileImage) {
-    const url = `${req.files.profileImage[0].destination}/${req.files.profileImage[0].filename}`;
-    profileImagePath = url;
-  } else {
-    profileImagePath = ""
-  }
-
-  const hashedPassword = await bcrypt.hash(password, 12);
-
-  let vendor = new Vendor({
-    owner_name,
-    shop_name,
-    user_id,
-    password: hashedPassword,
-    mobile_no,
-    alternate_phoneNo,
-    email,
-    profileImage: profileImagePath,
-    gst_no,
-    pan_no,
-    service_id,
-    food_license_no,
-    lat,
-    long,
-    address,
-    description
+  const newVendor = await Vendor.create({
+    name, userId, password: hashPassword, mobile,
+    alternateMobile, email,
+    profileImg, panNo, gstNo, foodLicense,
+    panImage, gstImage, foodImage,
+    ifsc, bankName, branchName, accountNo, passbook, agreementAccepted: agreement || false,
   });
-
-  await vendor.save();
-
-  let vendorAccount = await VendorAccount.create({
-    vendorId: vendor._id,
-    bankName: "",
-    accountNo: "",
-    ifsc: "",
-    branchName: "",
-  });
-
-  const daysOfWeek = [
-    "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"
-  ];
-
-  const defaultSchedule = daysOfWeek.map(day => ({
-    day,
-    openTime: "",
-    closeTime: "",
-    isClosed: false,
-  }));
-
-  let shopTime = await ShopSchedule.create({
-    vendorId: vendor._id,
-    schedule: defaultSchedule
-  });
-
 
   return res.status(201).json({
-    status: true,
-    message: "Vendor Register Successfully please wait for account approval!",
-    data: { vendor, vendorAccount, shopTime },
-    newVendor: true,
+    success: true,
+    message: "Vendor registered successfully",
+    vendor: newVendor
   });
 });
