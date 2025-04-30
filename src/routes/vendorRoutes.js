@@ -36,6 +36,16 @@ const { statusShop } = require("../controllers/vendor/shopController/statusShop"
 const { vendorShopList } = require("../controllers/vendor/shopController/vendorShopList");
 const { getTermCondition } = require("../controllers/vendor/cmsController/getTermCondition");
 const { getFee } = require("../controllers/vendor/cmsController/getFee");
+const { createCopyProduct } = require("../controllers/vendor/copyProductController/createCopyProduct");
+const { createBulkCopyProduct } = require("../controllers/vendor/copyProductController/createBulkCopyProduct");
+const { getAllProductForAssign } = require("../controllers/vendor/copyProductController/getAllProductForAssign");
+const { getAllProductOfShop } = require("../controllers/vendor/copyProductController/getAllProductOfShop");
+const { getCopyProductDetail } = require("../controllers/vendor/copyProductController/getCopyProductDetail");
+const { updateCopyProductStatus } = require("../controllers/vendor/copyProductController/updateCopyProductStatus");
+const { deleteCopyProduct } = require("../controllers/vendor/copyProductController/deleteCopyProduct");
+const { updateCopyProduct } = require("../controllers/vendor/copyProductController/updateCopyProduct");
+const { updateVendorProfile } = require("../controllers/vendor/authController/updateVendorProfile");
+const { updateVendorAccount } = require("../controllers/vendor/authController/updateVendorAccount");
 
 // router.get("/test", test);
 
@@ -57,6 +67,8 @@ router.post("/login", login);
 router.get("/getProfile", vendorAuthenticate, getProfile);
 router.post("/forgetPassword", forgetPassword);
 router.post("/updateProfile", vendorAuthenticate, fileUploader("vendor", [{ name: "profileImage", maxCount: 1 }]), updateProfile);
+router.patch("/update/profile", vendorAuthenticate, updateVendorProfile)
+router.patch("/update/account", vendorAuthenticate, fileUploader("vendor", [{ name: "passbook", maxCount: 1 }]), updateVendorAccount)
 router.get("/logout", logout);
 
 // shop
@@ -131,6 +143,16 @@ router.patch(
 );
 router.delete("/product/delete/:id", vendorAuthenticate, deleteProduct);
 router.post("/product/delete/bulk", vendorAuthenticate, deleteMultipleProducts)
+
+// copy product
+router.post("/copy/product/create", vendorAuthenticate, createCopyProduct)
+router.get("/copy/product/all", vendorAuthenticate, getAllProductForAssign)
+router.get("/shop/product/:shopId", vendorAuthenticate, getAllProductOfShop)
+router.get("/copy/product/:id", vendorAuthenticate, getCopyProductDetail)
+router.patch("/copy/product/status/:id", vendorAuthenticate, updateCopyProductStatus)
+router.post("/copy/product/bulk/create", vendorAuthenticate, createBulkCopyProduct)
+router.delete("/copy/product/delete/:id", vendorAuthenticate, deleteCopyProduct)
+router.patch("/copy/product/update/:id", vendorAuthenticate, updateCopyProduct)
 
 
 // order

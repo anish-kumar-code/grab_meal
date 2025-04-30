@@ -22,6 +22,9 @@ const { updateProductStatus } = require("../controllers/admin/productController/
 const { createProduct } = require("../controllers/admin/productController/createProduct");
 const { getAllBrand } = require("../controllers/admin/brandController/getAllBrand");
 const { getProductViaService } = require("../controllers/admin/productController/getProductViaService");
+const { getSettings } = require("../controllers/admin/settingController/getSettings");
+const { addSettings } = require("../controllers/admin/settingController/addSettings");
+const { updateSettings } = require("../controllers/admin/settingController/updateSettings");
 const router = express.Router()
 
 router.get("/test/admin", (req, res) => {
@@ -66,6 +69,13 @@ router.get("/vendor/:id", getVendorDetails)
 router.patch("/vendor/block/:id", vendorBlock)
 router.patch("/vendor/approve/:id", vendorApprove);
 router.get("/vendor/:id/product", adminAuthenticate, getVendorProduct)
+
+//------------------------------------------------
+// settings
+//------------------------------------------------
+router.post("/settings/add", fileUploader("logo", [{ name: "image", maxCount: 1 }]), addSettings)
+router.patch("/settings/update/:id", fileUploader("logo", [{ name: "image", maxCount: 1 }]), updateSettings)
+router.get("/settings", getSettings)
 
 
 
