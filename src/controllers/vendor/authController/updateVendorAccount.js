@@ -12,10 +12,6 @@ exports.updateVendorAccount = catchAsync(async (req, res, next) => {
         if (branchName.trim() == 'undefined') branchName = ""
         if (ifsc.trim() == 'undefined') ifsc = ""
 
-        // const passbook = req.files.passbook && req.files.passbook[0] ? req.files.passbook[0].path : "";
-        console.log(req.files.passbook);
-        return
-
         const vendor = await Vendor.findById(vendorId);
         if (!vendor) return next(new AppError("Vendor not found.", 404));
 

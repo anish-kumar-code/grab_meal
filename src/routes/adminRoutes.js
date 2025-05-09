@@ -25,14 +25,23 @@ const { getProductViaService } = require("../controllers/admin/productController
 const { getSettings } = require("../controllers/admin/settingController/getSettings");
 const { addSettings } = require("../controllers/admin/settingController/addSettings");
 const { updateSettings } = require("../controllers/admin/settingController/updateSettings");
+const { getAllShop } = require("../controllers/admin/vendorController/getAllShop");
+const { getAllData } = require("../controllers/admin/dashboardController/getAllData");
+const { getShop } = require("../controllers/admin/shopController/getShop");
+const { createDriver } = require("../controllers/admin/driverController/createDriver");
+const { getDriver } = require("../controllers/admin/driverController/showDriver");
 const router = express.Router()
 
 router.get("/test/admin", (req, res) => {
     res.status(200).json({ message: "Admin Route Working" });
 })
 
+//------------------------------------------------
+// auth
+//------------------------------------------------
 router.post('/signup', signup)
 router.post('/login', login)
+router.get("/dashboard", adminAuthenticate, getAllData)
 
 //------------------------------------------------
 // category
@@ -69,6 +78,20 @@ router.get("/vendor/:id", getVendorDetails)
 router.patch("/vendor/block/:id", vendorBlock)
 router.patch("/vendor/approve/:id", vendorApprove);
 router.get("/vendor/:id/product", adminAuthenticate, getVendorProduct)
+router.get("/vendor/shop/list/:vendorId", adminAuthenticate, getAllShop)
+
+//------------------------------------------------
+// shop
+//------------------------------------------------
+router.get("/shop/list", getShop)
+
+
+//------------------------------------------------
+// driver
+//------------------------------------------------
+router.post("/driver/create", adminAuthenticate, fileUploader("driver", [{ name: "image", maxCount: 1 }]), createDriver);
+router.get('/driver/list', adminAuthenticate, getDriver)
+
 
 //------------------------------------------------
 // settings

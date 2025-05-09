@@ -25,11 +25,10 @@ const vendorSchema = new mongoose.Schema({
   accountNo: { type: String, default: '' },
   passbook: { type: String, default: '' },
   commission: { type: Number, default: 0 },
+  wallet_balance: { type: Number, default: 0 },
   isBlocked: { type: Boolean, default: false },
-  status: { type: Boolean, default: false },
-
-  // AGREEMENT DETAILS
   agreementAccepted: { type: String, default: 'true' },
+  status: { type: Boolean, default: false },
   createdAt: { type: Date, default: Date.now }
 });
 

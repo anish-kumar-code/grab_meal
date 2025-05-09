@@ -9,7 +9,7 @@ exports.createBulkCopyProduct = catchAsync(async (req, res, next) => {
 
         let { shopId, selectedProducts } = req.body
         let vendorId = req.vendor._id
-        
+
         /**
         * selectedProducts is array like:
         * [
@@ -53,7 +53,7 @@ exports.createBulkCopyProduct = catchAsync(async (req, res, next) => {
 
         await VendorProduct.insertMany(vendorProducts);
 
-        return res.status(201).json({ message: "Vendor product added successfully", vendorProducts });
+        return res.status(201).json({ message: "Vendor product added successfully", status: "success", vendorProducts });
 
     } catch (error) {
         console.error(error);

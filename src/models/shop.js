@@ -20,6 +20,7 @@ const shopSchema = new mongoose.Schema({
     packingCharge: { type: Number, default: 0 },
     menu: [{ type: String }],
     isClose: { type: Boolean, default: false },
+    wallet_balance: { type: Number, default: 0 },
     status: { type: String, enum: ['active', 'inactive'], default: 'active' },
 })
 

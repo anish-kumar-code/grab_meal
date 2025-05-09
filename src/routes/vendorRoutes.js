@@ -46,11 +46,18 @@ const { deleteCopyProduct } = require("../controllers/vendor/copyProductControll
 const { updateCopyProduct } = require("../controllers/vendor/copyProductController/updateCopyProduct");
 const { updateVendorProfile } = require("../controllers/vendor/authController/updateVendorProfile");
 const { updateVendorAccount } = require("../controllers/vendor/authController/updateVendorAccount");
+const { updateVendorDocument } = require("../controllers/vendor/authController/updateVendorDocument");
+const { getVendorWallet } = require("../controllers/vendor/walletController/getVendorWallet");
+const { getAllShopWallet } = require("../controllers/vendor/walletController/getAllShopWallet");
+const { createWalletRequest } = require("../controllers/vendor/walletController/createWalletRequest");
+const { getWalletRequest } = require("../controllers/vendor/walletController/getWalletRequest");
+const { getVendorWalletHistory } = require("../controllers/vendor/walletController/getVendorWalletHistory");
 
 // router.get("/test", test);
 
+//------------------------------------------------
 // auth
-// router.post("/register", fileUploader("vendor", [{ name: "profileImage", maxCount: 1 }]), signUp);
+//------------------------------------------------
 router.post("/register",
     fileUploader("vendor", [
         { name: "profileImg", maxCount: 1 },
@@ -61,17 +68,24 @@ router.post("/register",
     ]),
     signUp
 );
-// router.post("/register", signUp);
-
 router.post("/login", login);
 router.get("/getProfile", vendorAuthenticate, getProfile);
 router.post("/forgetPassword", forgetPassword);
 router.post("/updateProfile", vendorAuthenticate, fileUploader("vendor", [{ name: "profileImage", maxCount: 1 }]), updateProfile);
 router.patch("/update/profile", vendorAuthenticate, updateVendorProfile)
 router.patch("/update/account", vendorAuthenticate, fileUploader("vendor", [{ name: "passbook", maxCount: 1 }]), updateVendorAccount)
+router.patch("/update/document", vendorAuthenticate,
+    fileUploader("vendor", [
+        { name: "panImage", maxCount: 1 },
+        { name: "gstImage", maxCount: 1 },
+        { name: "foodImage", maxCount: 1 }
+    ]), updateVendorDocument)
 router.get("/logout", logout);
 
+
+//------------------------------------------------
 // shop
+//------------------------------------------------
 router.post("/shop/create", vendorAuthenticate,
     fileUploader("shop", [
         { name: "shopImage", maxCount: 1 },
@@ -94,33 +108,50 @@ router.post("/shop/close/:id", vendorAuthenticate, closeShop);
 router.post("/shop/status/:id", vendorAuthenticate, statusShop);
 
 
+//------------------------------------------------
 // service
+//------------------------------------------------
 router.post("/service/create", createService);
 router.get("/service/list", getAllService)
 
 
+//------------------------------------------------
 // category
+//------------------------------------------------
 router.post("/category/create", vendorAuthenticate, fileUploader("category", [{ name: "image", maxCount: 1 }]), createCategory)
 router.get("/category/list", getAllCategory)
 router.post("/subcategory/list", getAllSubCategory)
 
 
+//------------------------------------------------
 // brand
+//------------------------------------------------
 router.post("/brand/create", vendorAuthenticate, fileUploader("brand", [{ name: "image", maxCount: 1 }]), createBrand);
 router.get("/brand/list", getAllBrand)
 
+
+//------------------------------------------------
 // toppins
+//------------------------------------------------
 router.post("/toppins/create", vendorAuthenticate, createToppins);
 
+
+//------------------------------------------------
 // coupon
+//------------------------------------------------
 router.post("/coupon/create", vendorAuthenticate, createCoupon)
 
+
+//------------------------------------------------
 // cms pages
+//------------------------------------------------
 router.get("/term-and-condition", getTermCondition)
 router.get("/fee", getFee)
 
 
-// product
+//------------------------------------------------
+// product ( these are not working)
+//------------------------------------------------
 router.post("/product/create",
     vendorAuthenticate,
     fileUploader("product", [
@@ -144,7 +175,10 @@ router.patch(
 router.delete("/product/delete/:id", vendorAuthenticate, deleteProduct);
 router.post("/product/delete/bulk", vendorAuthenticate, deleteMultipleProducts)
 
+
+//------------------------------------------------
 // copy product
+//------------------------------------------------
 router.post("/copy/product/create", vendorAuthenticate, createCopyProduct)
 router.get("/copy/product/all", vendorAuthenticate, getAllProductForAssign)
 router.get("/shop/product/:shopId", vendorAuthenticate, getAllProductOfShop)
@@ -155,7 +189,31 @@ router.delete("/copy/product/delete/:id", vendorAuthenticate, deleteCopyProduct)
 router.patch("/copy/product/update/:id", vendorAuthenticate, updateCopyProduct)
 
 
+//------------------------------------------------
+// wallet
+//------------------------------------------------
+
+router.get("/wallet", vendorAuthenticate, getVendorWallet)
+router.get("/shops/wallets", vendorAuthenticate, getAllShopWallet)
+// router.get("/shop/:shopId/wallet/history", vendorAuthenticate, getShopWalletHistory);
+router.get("/wallet/history", vendorAuthenticate, getVendorWalletHistory)
+// router.post("/admin/vendor/:vendorId/wallet/settle", adminAuthenticate, settleVendorWallet); this is for admin
+// router.get("/wallet/settlements", vendorAuthenticate, getVendorWalletSettlements);
+
+
+//------------------------------------------------
+// wallet Request
+//------------------------------------------------
+
+router.post("/wallet/request", vendorAuthenticate, createWalletRequest)
+router.get("/wallet/request", vendorAuthenticate, getWalletRequest)
+
+
+
+
+//------------------------------------------------
 // order
+//------------------------------------------------
 router.get("/order/list", vendorAuthenticate, getAllOrder)
 router.get("/order/today", vendorAuthenticate, todayOrder)
 router.get("/order/:id", vendorAuthenticate, getOrder)

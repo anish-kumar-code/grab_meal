@@ -3,11 +3,9 @@ const VendorProduct = require("../../../models/vendorProduct");
 const AppError = require("../../../utils/AppError");
 const catchAsync = require("../../../utils/catchAsync");
 
-exports.vendorShopList = catchAsync(async (req, res, next) => {
+exports.getShop = catchAsync(async (req, res, next) => {
 
-    const vendorId = req.vendor._id;
-
-    const shops = await Shop.find({ vendorId }).populate('serviceId', 'name');
+    const shops = await Shop.find().populate('serviceId', 'name').populate('vendorId', 'name');
     if (!shops) return next(new AppError("No shop found.", 404));
 
     const shopsWithProductCounts = await Promise.all(
@@ -24,8 +22,7 @@ exports.vendorShopList = catchAsync(async (req, res, next) => {
     return res.status(200).json({
         status: true,
         results: shops.length,
-        data: shopsWithProductCounts,
-        // productCount: shopsWithProductCounts
+        data: shopsWithProductCounts
     })
 
 })
