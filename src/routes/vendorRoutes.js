@@ -52,6 +52,7 @@ const { getAllShopWallet } = require("../controllers/vendor/walletController/get
 const { createWalletRequest } = require("../controllers/vendor/walletController/createWalletRequest");
 const { getWalletRequest } = require("../controllers/vendor/walletController/getWalletRequest");
 const { getVendorWalletHistory } = require("../controllers/vendor/walletController/getVendorWalletHistory");
+const { getShopWalletHistory } = require("../controllers/vendor/walletController/getShopWalletHistory");
 
 // router.get("/test", test);
 
@@ -195,7 +196,7 @@ router.patch("/copy/product/update/:id", vendorAuthenticate, updateCopyProduct)
 
 router.get("/wallet", vendorAuthenticate, getVendorWallet)
 router.get("/shops/wallets", vendorAuthenticate, getAllShopWallet)
-// router.get("/shop/:shopId/wallet/history", vendorAuthenticate, getShopWalletHistory);
+router.get("/shop/:shopId/wallet/history", vendorAuthenticate, getShopWalletHistory);
 router.get("/wallet/history", vendorAuthenticate, getVendorWalletHistory)
 // router.post("/admin/vendor/:vendorId/wallet/settle", adminAuthenticate, settleVendorWallet); this is for admin
 // router.get("/wallet/settlements", vendorAuthenticate, getVendorWalletSettlements);

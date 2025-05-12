@@ -9,11 +9,15 @@ exports.login = catchAsync(async (req, res, next) => {
     if (!userId || !password)
         return next(new AppError("User id and password are required.", 404));
 
-    const vendor = await Vendor.findOne({ userId }).select("password");
+    const vendor = await Vendor.findOne({ userId });
 
     if (!vendor || !(await bcrypt.compare(password, vendor.password))) {
         return next(new AppError("Invalid user id or password.", 404));
     }
+
+    if(!vendor.status) return next(new AppError("You are not verified. Wait for verification", 404));
+
+    if(vendor.isBlocked) return next(new AppError("You are blocked", 404));
 
     createToken(vendor, 200, res);
 });

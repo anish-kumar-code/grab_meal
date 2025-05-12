@@ -5,7 +5,7 @@ const catchAsync = require("../../../utils/catchAsync");
 
 exports.getShop = catchAsync(async (req, res, next) => {
 
-    const shops = await Shop.find().populate('serviceId', 'name').populate('vendorId', 'name');
+    const shops = await Shop.find().sort({"createdAt": -1}).populate('serviceId', 'name').populate('vendorId', 'name');
     if (!shops) return next(new AppError("No shop found.", 404));
 
     const shopsWithProductCounts = await Promise.all(

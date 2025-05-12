@@ -22,6 +22,7 @@ const shopSchema = new mongoose.Schema({
     isClose: { type: Boolean, default: false },
     wallet_balance: { type: Number, default: 0 },
     status: { type: String, enum: ['active', 'inactive'], default: 'active' },
+    createdAt: { type: Date, default: Date.now }
 })
 
 const Shop = mongoose.model("Shop", shopSchema)

@@ -9,6 +9,8 @@ const adminSchema = mongoose.Schema({
     password: { type: String, required: true },
     address: { type: String, required: true },
     bio: { type: String, required: true },
+}, {
+    timestamps: true
 });
 
 // Pre-save middleware to hash the password

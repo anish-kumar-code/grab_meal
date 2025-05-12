@@ -7,7 +7,6 @@ exports.createWalletRequest = catchAsync(async (req, res, next) => {
 
         let { amount_requested, message } = req.body
         const vendorId = req.vendor._id;
-        // const date = 
 
         if (!amount_requested || amount_requested <= 0) {
             return res.status(400).json({ message: "Invalid withdrawal amount", status: "notsuccess" });
@@ -24,7 +23,7 @@ exports.createWalletRequest = catchAsync(async (req, res, next) => {
         }
 
         const walletRequest = await WalletRequest.create({
-            vendor: vendorId,
+            vendorId,
             amount_requested,
             message,
             status: "pending",

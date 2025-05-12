@@ -4,8 +4,11 @@ const Schema = mongoose.Schema;
 const walletTransactionSchema = new Schema({
     shopId: { type: mongoose.Schema.Types.ObjectId, ref: 'Shop', required: true },
     orderId: { type: mongoose.Schema.Types.ObjectId, ref: 'Order', required: true }, // Unique identifier for the order
-    amount: { type: Number, required: true }, // Total order amount
-    commission: { type: Number, required: true }, // Admin commission (default 20%)
+    amount: { type: Number, required: true, default: "0" }, // Total order amount
+    commission: { type: Number, required: true, default: "0" }, // Admin commission (default 20%)
+    commission_amount: { type: Number, required: true, default: "0" }, // after 20% cut then amount
+    type: {type: String, enum: ["Order Payment", "Admin Bonus"]},
+    is_bonus : {type: Boolean, default: false},  // this will true when 10th series order come and then only 10% commission charge
     final_amount: { type: Number, required: true }, // Final amount after commission deduction
     createdAt: { type: Date, default: Date.now },
 });

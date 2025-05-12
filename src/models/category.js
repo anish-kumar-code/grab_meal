@@ -25,6 +25,8 @@ const category = mongoose.Schema({
         enum: ["active", "inactive"],
         default: "active"
     }
+}, {
+    timestamps: true
 });
 
 const Category = mongoose.model("Category", category);

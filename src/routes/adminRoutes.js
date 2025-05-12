@@ -30,6 +30,11 @@ const { getAllData } = require("../controllers/admin/dashboardController/getAllD
 const { getShop } = require("../controllers/admin/shopController/getShop");
 const { createDriver } = require("../controllers/admin/driverController/createDriver");
 const { getDriver } = require("../controllers/admin/driverController/showDriver");
+const { deleteShop } = require("../controllers/admin/shopController/deleteShop");
+const { deleteVendor } = require("../controllers/admin/vendorController/deleteVendor");
+const { getWalletRequest } = require("../controllers/admin/walletController/getWalletRequest");
+const { changeStatusWalletRequest } = require("../controllers/admin/walletController/changeStatusWalletRequest");
+const { settleRequest } = require("../controllers/admin/walletController/settleRequest");
 const router = express.Router()
 
 router.get("/test/admin", (req, res) => {
@@ -73,17 +78,19 @@ router.get("/brand/list", adminAuthenticate, getAllBrand)
 //------------------------------------------------
 // vendor
 //------------------------------------------------
-router.get("/vendor/list", getVendor)
-router.get("/vendor/:id", getVendorDetails)
-router.patch("/vendor/block/:id", vendorBlock)
-router.patch("/vendor/approve/:id", vendorApprove);
+router.get("/vendor/list", adminAuthenticate, getVendor)
+router.get("/vendor/:id", adminAuthenticate, getVendorDetails)
+router.patch("/vendor/block/:id", adminAuthenticate, vendorBlock)
+router.patch("/vendor/approve/:id", adminAuthenticate, vendorApprove);
+router.delete("/vendor/delete/:id", adminAuthenticate, deleteVendor);
 router.get("/vendor/:id/product", adminAuthenticate, getVendorProduct)
 router.get("/vendor/shop/list/:vendorId", adminAuthenticate, getAllShop)
 
 //------------------------------------------------
 // shop
 //------------------------------------------------
-router.get("/shop/list", getShop)
+router.get("/shop/list", adminAuthenticate, getShop)
+router.delete("/shop/delete/:shopId", adminAuthenticate, deleteShop)
 
 
 //------------------------------------------------
@@ -91,6 +98,28 @@ router.get("/shop/list", getShop)
 //------------------------------------------------
 router.post("/driver/create", adminAuthenticate, fileUploader("driver", [{ name: "image", maxCount: 1 }]), createDriver);
 router.get('/driver/list', adminAuthenticate, getDriver)
+
+
+//------------------------------------------------
+// wallet
+//------------------------------------------------
+
+// router.get("/wallet", vendorAuthenticate, getVendorWallet)
+// router.get("/shops/wallets", vendorAuthenticate, getAllShopWallet)
+// router.get("/shop/:shopId/wallet/history", vendorAuthenticate, getShopWalletHistory);
+// router.get("/wallet/history", vendorAuthenticate, getVendorWalletHistory)
+// router.post("/admin/vendor/:vendorId/wallet/settle", adminAuthenticate, settleVendorWallet); this is for admin
+// router.get("/wallet/settlements", vendorAuthenticate, getVendorWalletSettlements);
+
+
+//------------------------------------------------
+// wallet Request
+//------------------------------------------------
+
+// router.post("/wallet/request", adminAuthenticate, createWalletRequest)
+router.get("/wallet/request", adminAuthenticate, getWalletRequest)
+router.post("/wallet/request/status/:requestId", adminAuthenticate, changeStatusWalletRequest)
+router.post("/wallet/request/settle/:requestId", adminAuthenticate, settleRequest);
 
 
 //------------------------------------------------
