@@ -193,9 +193,12 @@ const OrderSchema = new Schema({
     },
     orderStatus: {
         type: String,
-        enum: ['pending', 'accepted', 'preparing', 'shipped', 'out of delivery', 'delivered', 'cancelled'],
+        enum: ['pending', 'accepted', 'preparing', 'ready', 'shipped', 'out of delivery', 'delivered', 'cancelled'],
         default: 'pending'
     },
+    preparationTime: { type: Number, default: null },
+    preparationStartedAt: { type: Date, default: null },
+    readyAt: { type: Date, default: null },
     paymentMode: {
         type: String,
         enum: ['cash', 'card', 'upi', 'wallet'],

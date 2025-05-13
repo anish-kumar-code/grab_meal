@@ -1,7 +1,7 @@
 const VendorProduct = require("../../../models/vendorProduct");
 const Order = require("../../../models/order");
 
-let bookingCounter = 1; // Persist in DB in production
+// let bookingCounter = 3; // Persist in DB in production
 
 const createOrder = async (req, res) => {
     try {
@@ -18,8 +18,8 @@ const createOrder = async (req, res) => {
         const userId = req.user._id;
 
         // Generate unique booking ID (e.g., ORD-001)
-        const booking_id = `ORD-${String(bookingCounter).padStart(3, '0')}`;
-        bookingCounter++;
+        const orderCount = await Order.countDocuments();
+        const booking_id = `ORD-${String(orderCount + 1).padStart(3, '0')}`;
 
         // Fetch vendorProduct to derive shop and vendor
         const productDetails = await VendorProduct.findById(prod.product_id)

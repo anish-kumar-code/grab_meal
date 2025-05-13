@@ -53,6 +53,7 @@ const { createWalletRequest } = require("../controllers/vendor/walletController/
 const { getWalletRequest } = require("../controllers/vendor/walletController/getWalletRequest");
 const { getVendorWalletHistory } = require("../controllers/vendor/walletController/getVendorWalletHistory");
 const { getShopWalletHistory } = require("../controllers/vendor/walletController/getShopWalletHistory");
+const { changeOrderStatus } = require("../controllers/vendor/orderController/changeOrderStatus");
 
 // router.get("/test", test);
 
@@ -217,7 +218,8 @@ router.get("/wallet/request", vendorAuthenticate, getWalletRequest)
 //------------------------------------------------
 router.get("/order/list", vendorAuthenticate, getAllOrder)
 router.get("/order/today", vendorAuthenticate, todayOrder)
-router.get("/order/:id", vendorAuthenticate, getOrder)
+router.get("/order/status/:orderId", vendorAuthenticate, changeOrderStatus)
+router.get("/order/:orderId", vendorAuthenticate, getOrder)
 
 
 
