@@ -1,94 +1,83 @@
+const VendorProduct = require("../../../models/vendorProduct");
 const Order = require("../../../models/order");
-const OrderDetails = require("../../../models/orderDetails");
-const VendorOrderHistory = require("../../../models/vendorOrderHistory");
-const AppError = require("../../../utils/AppError");
-const catchAsync = require("../../../utils/catchAsync");
 
-exports.createOrder = catchAsync(async (req, res, next) => {
-    let { product_data, item_total, coupon_id, coupon_amt, coupon_code, after_coupon_amount, address_id, delivery_date, delivery_time, delivery_charge, payment_mode } = req.body;
+let bookingCounter = 1; // Persist in DB in production
 
-    if (!product_data || !Array.isArray(product_data) || product_data.length === 0) {
-        return next(new AppError("Product data is required and must be an array.", 400));
-    }
-    if (!item_total) return next(new AppError("Total Items Price is required.", 400));
-    if (!address_id) return next(new AppError("Address ID is required.", 400));
-    if (!delivery_date) return next(new AppError("Delivery date is required.", 400));
-    if (!delivery_time) return next(new AppError("Delivery time is required.", 400));
-    if (!payment_mode) return next(new AppError("Payment mode is required.", 400));
+const createOrder = async (req, res) => {
+    try {
+        const {
+            productData: prod,
+            addressId,
+            deliveryDate,
+            deliveryTime,
+            couponId = null,
+            couponCode = "",
+            couponAmount = 0,
+        } = req.body;
 
-    // const user_id = req.user._id
-    let user_id = "661234abcd5678ef90123456";
+        const userId = req.user._id;
 
-    // Generate a unique order ID
-    const booking_id = `ORD-${Date.now()}`;
+        // Generate unique booking ID (e.g., ORD-001)
+        const booking_id = `ORD-${String(bookingCounter).padStart(3, '0')}`;
+        bookingCounter++;
 
-    // Create new order
-    const order = new Order({
-        booking_id,
-        product_data,
-        item_total,
-        coupon_id: coupon_id || null,
-        coupon_amt: coupon_amt || 0,
-        coupon_code: coupon_code || null,
-        after_coupon_amount,
-        user_id,
-        address_id,
-        delivery_date,
-        delivery_time,
-        delivery_charge: delivery_charge || 0,
-        order_status: "pending",
-        payment_mode,
-        payment_status: "pending",
-        payment_id: null
-    });
+        // Fetch vendorProduct to derive shop and vendor
+        const productDetails = await VendorProduct.findById(prod.product_id)
+            .populate('shopId')
+            .populate('vendorId');
 
-    await order.save();
-
-    // filter order based on vendor and save theme in vendorOrder table
-    let vendorOrders = {};
-    product_data.forEach((product) => {
-        let vendor_id = product.vendor_id;
-        if (!vendorOrders[vendor_id]) {
-            vendorOrders[vendor_id] = [];
+        if (!productDetails || !productDetails.shopId || !productDetails.vendorId) {
+            return res.status(400).json({ error: 'Invalid product/shop/vendor information' });
         }
 
-        vendorOrders[vendor_id].push({
-            product_id: product.product_id,
-            name: product.name,
-            quantity: product.quantity,
-            price: product.price,
-        });
-    })
+        const shopId = productDetails.shopId._id;
+        const vendorId = productDetails.vendorId._id;
+        const packingCharge = productDetails.shopId.packingCharge || 0;
+        const deliveryCharge = 10; // Can be dynamic
 
-    for (let vendor_id in vendorOrders) {
-        const vendorOrder = new VendorOrderHistory({
-            order_id: order._id,
+        // Commission calculation
+        const commissionRate = productDetails.commissionRate || 0;
+        const commissionAmount = (prod.price * prod.quantity * commissionRate) / 100;
+
+        // Totals
+        const prodTotal = prod.finalPrice;
+        const afterCouponAmount = prodTotal - couponAmount;
+        const finalTotalPrice = afterCouponAmount + deliveryCharge + packingCharge;
+
+        // Build and save order document
+        const order = new Order({
             booking_id,
-            vendor_id,
-            products: vendorOrders[vendor_id],
-            order_status: "pending"
+            shopId,
+            vendorId,
+            productData: prod,
+            itemTotal: prodTotal,
+            couponId,
+            couponCode,
+            couponAmount,
+            afterCouponAmount,
+            userId,
+            addressId,
+            shopId,
+            vendorId,
+            deliveryDate,
+            deliveryTime,
+            deliveryCharge,
+            packingCharge,
+            commissionRate,
+            commissionAmount,
+            finalTotalPrice,
+            orderStatus: 'pending',
+            paymentMode: 'cash',
+            paymentStatus: 'paid',
+            paymentId: 'PAY123456',
         });
-        await vendorOrder.save();
+
+        await order.save();
+        return res.status(201).json({ success: true, order });
+    } catch (error) {
+        console.error('Error creating order:', error);
+        return res.status(500).json({ success: false, message: 'Server Error', error: error.message });
     }
+};
 
-    // store single single order in order details schema
-    for (let product of product_data) {
-        const orderDetail = new OrderDetails({
-            order_id: order._id,
-            vendor_id: product.vendor_id,
-            booking_id,
-            product_id: product.product_id,
-            quantity: product.quantity,
-            price: product.price,
-            status: "pending"
-        });
-        await orderDetail.save();
-    }
-
-
-    return res.status(201).json({
-        status: true,
-        message: "Order created successfully",
-        data: { order },
-    });
-});
+module.exports = createOrder;
